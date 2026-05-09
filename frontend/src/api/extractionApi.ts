@@ -1,0 +1,1 @@
+export { extractedFields } from "./documentsApi";
