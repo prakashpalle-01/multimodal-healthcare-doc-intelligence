@@ -1,0 +1,17 @@
+[project]
+name = "multimodal-healthcare-doc-intelligence"
+version = "0.1.0"
+description = "Multimodal healthcare document OCR, extraction, validation, RAG, and appeal generation platform."
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["backend/tests", "tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
