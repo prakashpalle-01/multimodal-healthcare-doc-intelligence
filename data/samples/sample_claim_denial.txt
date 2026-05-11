@@ -1,0 +1,11 @@
+Patient: Jane Smith
+Payer: Aetna
+Claim ID: CLM-2002
+Medication: Semaglutide 0.5 mg
+Denial reason: Missing prior authorization and medical necessity documentation
+Service Date: 2026-05-03
+Diagnosis: E11.9 Type 2 diabetes mellitus
+Procedure Code: J3490
+Billed Amount: 1284.00
+Prescriber: Dr. Elena Morris
+Notes: Patient has documented prior therapy history and requires dose escalation review.

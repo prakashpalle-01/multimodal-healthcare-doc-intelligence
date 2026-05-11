@@ -1,7 +1,7 @@
 import { FileUp, UploadCloud } from "lucide-react";
 
 interface FileUploaderProps {
-  onSelectFile: (filename: string) => void;
+  onSelectFile: (file: File) => void;
 }
 
 export default function FileUploader({ onSelectFile }: FileUploaderProps) {
@@ -22,7 +22,7 @@ export default function FileUploader({ onSelectFile }: FileUploaderProps) {
             onChange={(event) => {
               const file = event.target.files?.[0];
               if (file) {
-                onSelectFile(file.name);
+                onSelectFile(file);
               }
             }}
           />

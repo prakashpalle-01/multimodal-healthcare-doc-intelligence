@@ -3,7 +3,7 @@ import type { HealthcareDocument } from "../types/document";
 
 interface DocumentUploadProps {
   recentDocuments: HealthcareDocument[];
-  onSelectFile: (filename: string) => void;
+  onSelectFile: (file: File) => void;
 }
 
 export default function DocumentUpload({ recentDocuments, onSelectFile }: DocumentUploadProps) {

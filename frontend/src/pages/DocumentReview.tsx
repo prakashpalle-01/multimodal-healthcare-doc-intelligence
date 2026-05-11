@@ -6,13 +6,20 @@ import type { ExtractedField } from "../types/extraction";
 interface DocumentReviewProps {
   document: HealthcareDocument;
   fields: ExtractedField[];
+  workflowMessage: string;
 }
 
-export default function DocumentReview({ document, fields }: DocumentReviewProps) {
+export default function DocumentReview({ document, fields, workflowMessage }: DocumentReviewProps) {
   return (
-    <section className="review-grid">
-      <DocumentViewer document={document} />
-      <ExtractedFieldsPanel fields={fields} />
-    </section>
+    <div className="page-stack">
+      <section className="workflow-banner">
+        <strong>{document.filename}</strong>
+        <span>{workflowMessage}</span>
+      </section>
+      <section className="review-grid">
+        <DocumentViewer document={document} />
+        <ExtractedFieldsPanel fields={fields} />
+      </section>
+    </div>
   );
 }

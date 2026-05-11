@@ -163,7 +163,24 @@ export const auditEvents: AuditEvent[] = [
   }
 ];
 
-export function uploadDocument(filename: string): HealthcareDocument {
+interface UploadResponse {
+  document_id: string;
+  filename: string;
+  content_type: string | null;
+  status: string;
+  document_type: string;
+}
+
+const documentTypeLabels: Record<string, HealthcareDocument["type"]> = {
+  prescription: "Prescription",
+  claim: "Claim",
+  eob: "EOB",
+  denial_letter: "Denial letter",
+  invoice: "Invoice",
+  unknown: "Claim"
+};
+
+export function createLocalDocument(filename: string): HealthcareDocument {
   return {
     id: `doc-${Date.now()}`,
     filename,
@@ -174,4 +191,34 @@ export function uploadDocument(filename: string): HealthcareDocument {
     status: "queued",
     confidence: 0
   };
+}
+
+export async function uploadDocument(file: File): Promise<HealthcareDocument> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch("/api/v1/documents", {
+      method: "POST",
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`Upload failed with status ${response.status}`);
+    }
+
+    const payload = (await response.json()) as UploadResponse;
+    return {
+      id: payload.document_id,
+      filename: payload.filename,
+      type: documentTypeLabels[payload.document_type] ?? "Claim",
+      payer: "Pending classification",
+      patient: "Pending extraction",
+      submittedAt: "Now",
+      status: "queued",
+      confidence: 0
+    };
+  } catch {
+    return createLocalDocument(file.name);
+  }
 }

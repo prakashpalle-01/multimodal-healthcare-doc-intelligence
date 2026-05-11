@@ -19,6 +19,8 @@ data/processed/**
 data/annotations/**
 data/samples/**
 !data/README.md
+!data/samples/
+!data/samples/sample_claim_denial.txt
 
 ai/models/checkpoints/**
 notebooks/.ipynb_checkpoints/

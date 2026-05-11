@@ -17,6 +17,12 @@ export default function ExtractedFieldsPanel({ fields }: ExtractedFieldsPanelPro
         </div>
       </div>
       <div className="field-list">
+        {fields.length === 0 && (
+          <article className="empty-state">
+            <strong>No fields extracted yet</strong>
+            <span>Upload a text sample while the backend is running to see OCR fields here.</span>
+          </article>
+        )}
         {fields.map((field) => (
           <article className="field-row" key={field.id}>
             <div className="field-status">

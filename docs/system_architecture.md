@@ -19,3 +19,9 @@
 3. Add RAG retrieval, denial explanation, and appeal drafting services.
 4. Build the frontend dashboard and review workflows.
 5. Add Kafka/Airflow pipelines, monitoring dashboards, Docker hardening, and Kubernetes deployment.
+
+## Current MVP Persistence
+
+The backend now uses SQLAlchemy repositories for documents, extraction results, validation results, and payer rules. Local development defaults to SQLite at `data/processed/app.db`; Docker and production environments can use PostgreSQL by setting `DATABASE_URL`.
+
+Starter payer rules are seeded automatically for common prior authorization and medical necessity checks. These rules are intentionally simple and should later move into admin-managed database records with payer policy versioning.

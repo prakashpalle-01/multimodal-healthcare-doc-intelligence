@@ -19,6 +19,7 @@ import {
   uploadDocument,
   validationIssues
 } from "./api/documentsApi";
+import { extractDocumentFields } from "./api/extractionApi";
 import AppealDraft from "./pages/AppealDraft";
 import ClaimValidation from "./pages/ClaimValidation";
 import Dashboard from "./pages/Dashboard";
@@ -26,6 +27,7 @@ import DenialExplanation from "./pages/DenialExplanation";
 import DocumentReview from "./pages/DocumentReview";
 import DocumentUpload from "./pages/DocumentUpload";
 import type { HealthcareDocument } from "./types/document";
+import type { ExtractedField } from "./types/extraction";
 
 type View = "dashboard" | "upload" | "review" | "validation" | "denials" | "appeals";
 
@@ -42,17 +44,50 @@ export default function App() {
   const [activeView, setActiveView] = useState<View>("dashboard");
   const [documents, setDocuments] = useState<HealthcareDocument[]>(initialDocuments);
   const [selectedDocumentId, setSelectedDocumentId] = useState(initialDocuments[0].id);
+  const [fieldsByDocumentId, setFieldsByDocumentId] = useState<Record<string, ExtractedField[]>>({});
+  const [workflowMessage, setWorkflowMessage] = useState("Ready for document intake.");
 
   const selectedDocument = useMemo(
     () => documents.find((document) => document.id === selectedDocumentId) ?? documents[0],
     [documents, selectedDocumentId]
   );
 
-  function handleSelectFile(filename: string) {
-    const document = uploadDocument(filename);
+  async function handleSelectFile(file: File) {
+    setWorkflowMessage(`Uploading ${file.name}...`);
+    const document = await uploadDocument(file);
     setDocuments((currentDocuments) => [document, ...currentDocuments]);
     setSelectedDocumentId(document.id);
     setActiveView("review");
+
+    if (document.id.startsWith("doc-")) {
+      setWorkflowMessage("Upload is in local preview mode. Start the backend to run OCR extraction.");
+      return;
+    }
+
+    setWorkflowMessage("Upload complete. Running OCR and extraction...");
+    try {
+      const fields = await extractDocumentFields(document.id);
+      setFieldsByDocumentId((currentFields) => ({
+        ...currentFields,
+        [document.id]: fields
+      }));
+      setDocuments((currentDocuments) =>
+        currentDocuments.map((currentDocument) =>
+          currentDocument.id === document.id
+            ? {
+                ...currentDocument,
+                status: fields.some((field) => field.needsReview) ? "needs_review" : "validated",
+                confidence: fields.length
+                  ? fields.reduce((total, field) => total + field.confidence, 0) / fields.length
+                  : 0
+              }
+            : currentDocument
+        )
+      );
+      setWorkflowMessage(`Extraction complete. Found ${fields.length} fields.`);
+    } catch {
+      setWorkflowMessage("Upload succeeded, but extraction failed. Check that the backend is running.");
+    }
   }
 
   const titleByView: Record<View, string> = {
@@ -124,7 +159,11 @@ export default function App() {
         )}
         {activeView === "review" && (
           <div className="workspace-grid">
-            <DocumentReview document={selectedDocument} fields={extractedFields} />
+            <DocumentReview
+              document={selectedDocument}
+              fields={fieldsByDocumentId[selectedDocument.id] ?? extractedFields}
+              workflowMessage={workflowMessage}
+            />
             <AuditTimeline events={auditEvents} />
           </div>
         )}

@@ -22,4 +22,12 @@ class ExtractionResponse(BaseModel):
     document_id: UUID
     document_type: DocumentType
     fields: list[ExtractedField]
+    text: str = ""
+    status: str = "completed"
+
+
+class OCRResponse(BaseModel):
+    document_id: UUID
+    text: str
+    engine: str
     status: str = "completed"
