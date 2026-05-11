@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  Database,
   FileInput,
   FileSearch,
   Gauge,
@@ -7,6 +8,7 @@ import {
   LayoutDashboard,
   Radio,
   PenLine,
+  RefreshCw,
   ShieldCheck
 } from "lucide-react";
 
@@ -14,9 +16,11 @@ import AuditTimeline from "./components/AuditTimeline";
 import {
   auditEvents,
   claimSummary,
+  checkBackendHealth,
   denialInsight,
   documents as initialDocuments,
   extractedFields,
+  fetchDocuments,
   uploadDocument,
   validationIssues
 } from "./api/documentsApi";
@@ -34,6 +38,7 @@ import type { HealthcareDocument } from "./types/document";
 import type { DenialInsight, ExtractedField, ValidationIssue } from "./types/extraction";
 
 type View = "dashboard" | "upload" | "review" | "validation" | "denials" | "appeals";
+type BackendStatus = "checking" | "online" | "offline";
 
 const navItems: Array<{ id: View; label: string; icon: typeof LayoutDashboard }> = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -54,6 +59,8 @@ export default function App() {
   >({});
   const [denialByDocumentId, setDenialByDocumentId] = useState<Record<string, DenialInsight>>({});
   const [appealByDocumentId, setAppealByDocumentId] = useState<Record<string, string>>({});
+  const [backendStatus, setBackendStatus] = useState<BackendStatus>("checking");
+  const [queueMessage, setQueueMessage] = useState("Using sample queue until backend documents load.");
   const [workflowMessage, setWorkflowMessage] = useState("Ready for document intake.");
   const [validationMessage, setValidationMessage] = useState("Select a backend document and run validation.");
   const [denialMessage, setDenialMessage] = useState("Select a backend document and explain denial.");
@@ -76,6 +83,38 @@ export default function App() {
 
   function isBackendDocument(documentId: string) {
     return !documentId.startsWith("doc-");
+  }
+
+  useEffect(() => {
+    void refreshBackendState();
+  }, []);
+
+  async function refreshBackendState() {
+    setBackendStatus("checking");
+    const healthy = await checkBackendHealth();
+    if (!healthy) {
+      setBackendStatus("offline");
+      setQueueMessage("Backend is offline. Showing sample queue data.");
+      return;
+    }
+
+    setBackendStatus("online");
+    try {
+      const backendDocuments = await fetchDocuments();
+      if (backendDocuments.length > 0) {
+        setDocuments(backendDocuments);
+        setSelectedDocumentId((currentId) =>
+          backendDocuments.some((document) => document.id === currentId)
+            ? currentId
+            : backendDocuments[0].id
+        );
+        setQueueMessage(`Loaded ${backendDocuments.length} persisted documents from backend.`);
+      } else {
+        setQueueMessage("Backend is online. Upload documents or seed sample data to populate the queue.");
+      }
+    } catch {
+      setQueueMessage("Backend health is online, but document loading failed.");
+    }
   }
 
   async function handleSelectFile(file: File) {
@@ -111,6 +150,7 @@ export default function App() {
         )
       );
       setWorkflowMessage(`Extraction complete. Found ${fields.length} fields.`);
+      setQueueMessage("New upload processed. Queue contains live backend data.");
     } catch {
       setWorkflowMessage("Upload succeeded, but extraction failed. Check that the backend is running.");
     }
@@ -196,7 +236,13 @@ export default function App() {
         </div>
         <div className="sidebar-status">
           <Radio size={15} aria-hidden="true" />
-          <span>Workflow engine online</span>
+          <span>
+            {backendStatus === "checking"
+              ? "Checking backend"
+              : backendStatus === "online"
+                ? "Workflow engine online"
+                : "Backend offline"}
+          </span>
         </div>
 
         <nav aria-label="Primary navigation">
@@ -227,7 +273,13 @@ export default function App() {
               <strong>{selectedDocument.filename}</strong>
               <small>{selectedDocument.type}</small>
             </span>
-            <span className="live-indicator">Live queue</span>
+            <span className={`live-indicator live-${backendStatus}`}>
+              <Database size={15} aria-hidden="true" />
+              {backendStatus === "online" ? "Live backend" : backendStatus === "checking" ? "Checking" : "Sample mode"}
+            </span>
+            <button className="icon-button" title="Refresh backend data" onClick={refreshBackendState}>
+              <RefreshCw size={18} aria-hidden="true" />
+            </button>
             <button className="primary-button" onClick={() => setActiveView("upload")}>
               <FileInput size={18} aria-hidden="true" />
               Upload
@@ -239,6 +291,7 @@ export default function App() {
           <Dashboard
             documents={documents}
             selectedId={selectedDocumentId}
+            queueMessage={queueMessage}
             onSelectDocument={(id) => {
               setSelectedDocumentId(id);
               setActiveView("review");

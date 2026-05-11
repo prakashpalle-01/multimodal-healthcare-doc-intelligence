@@ -215,6 +215,7 @@ h1 {
 .live-indicator {
   display: inline-flex;
   align-items: center;
+  gap: 7px;
   min-height: 42px;
   padding: 0 12px;
   border: 1px solid var(--line);
@@ -223,6 +224,24 @@ h1 {
   background: white;
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+.live-online {
+  color: var(--green);
+  background: #eefaf5;
+  border-color: #bde4d7;
+}
+
+.live-checking {
+  color: var(--yellow);
+  background: #fff9e9;
+  border-color: #ecd89e;
+}
+
+.live-offline {
+  color: var(--red);
+  background: #fff1ef;
+  border-color: #efc0b9;
 }
 
 .primary-button,
@@ -355,6 +374,17 @@ h1 {
   background: var(--blue-soft);
   font-size: 0.8rem;
   font-weight: 800;
+}
+
+.queue-context {
+  border: 1px solid #e3ebef;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  color: #36525d;
+  background: #fbfdfe;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .queue-table {

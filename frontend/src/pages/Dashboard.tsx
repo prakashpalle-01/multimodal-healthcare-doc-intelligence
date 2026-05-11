@@ -6,6 +6,7 @@ import type { HealthcareDocument } from "../types/document";
 interface DashboardProps {
   documents: HealthcareDocument[];
   selectedId: string;
+  queueMessage: string;
   onSelectDocument: (id: string) => void;
 }
 
@@ -17,7 +18,12 @@ const statusLabels: Record<HealthcareDocument["status"], string> = {
   appeal_ready: "Appeal ready"
 };
 
-export default function Dashboard({ documents, selectedId, onSelectDocument }: DashboardProps) {
+export default function Dashboard({
+  documents,
+  selectedId,
+  queueMessage,
+  onSelectDocument
+}: DashboardProps) {
   const needsReview = documents.filter((document) => document.status === "needs_review").length;
   const appealReady = documents.filter((document) => document.status === "appeal_ready").length;
   const avgConfidence = documents.length
@@ -59,6 +65,7 @@ export default function Dashboard({ documents, selectedId, onSelectDocument }: D
           </div>
           <span className="queue-count">{documents.length} active</span>
         </div>
+        <div className="queue-context">{queueMessage}</div>
         <div className="queue-table">
           <div className="queue-head">
             <span>Document</span>

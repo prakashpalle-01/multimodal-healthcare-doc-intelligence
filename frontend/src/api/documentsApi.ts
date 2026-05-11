@@ -171,6 +171,12 @@ interface UploadResponse {
   document_type: string;
 }
 
+interface DocumentRecordResponse extends UploadResponse {
+  storage_path: string;
+  size_bytes: number;
+  ocr_text: string | null;
+}
+
 const documentTypeLabels: Record<string, HealthcareDocument["type"]> = {
   prescription: "Prescription",
   claim: "Claim",
@@ -179,6 +185,27 @@ const documentTypeLabels: Record<string, HealthcareDocument["type"]> = {
   invoice: "Invoice",
   unknown: "Claim"
 };
+
+const statusLabels: Record<string, HealthcareDocument["status"]> = {
+  staged: "queued",
+  ocr_completed: "processing",
+  extraction_completed: "needs_review",
+  validated: "validated",
+  appeal_ready: "appeal_ready"
+};
+
+function mapBackendDocument(payload: UploadResponse): HealthcareDocument {
+  return {
+    id: payload.document_id,
+    filename: payload.filename,
+    type: documentTypeLabels[payload.document_type] ?? "Claim",
+    payer: "Pending classification",
+    patient: "Pending extraction",
+    submittedAt: "Saved",
+    status: statusLabels[payload.status] ?? "queued",
+    confidence: 0
+  };
+}
 
 export function createLocalDocument(filename: string): HealthcareDocument {
   return {
@@ -208,17 +235,28 @@ export async function uploadDocument(file: File): Promise<HealthcareDocument> {
     }
 
     const payload = (await response.json()) as UploadResponse;
-    return {
-      id: payload.document_id,
-      filename: payload.filename,
-      type: documentTypeLabels[payload.document_type] ?? "Claim",
-      payer: "Pending classification",
-      patient: "Pending extraction",
-      submittedAt: "Now",
-      status: "queued",
-      confidence: 0
-    };
+    return { ...mapBackendDocument(payload), submittedAt: "Now" };
   } catch {
     return createLocalDocument(file.name);
+  }
+}
+
+export async function fetchDocuments(): Promise<HealthcareDocument[]> {
+  const response = await fetch("/api/v1/documents");
+
+  if (!response.ok) {
+    throw new Error(`Document fetch failed with status ${response.status}`);
+  }
+
+  const payload = (await response.json()) as DocumentRecordResponse[];
+  return payload.map(mapBackendDocument);
+}
+
+export async function checkBackendHealth(): Promise<boolean> {
+  try {
+    const response = await fetch("/api/v1/health");
+    return response.ok;
+  } catch {
+    return false;
   }
 }
