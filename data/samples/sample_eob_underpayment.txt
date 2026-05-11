@@ -1,0 +1,12 @@
+Patient: Owen Carter
+Payer: Blue Cross
+Claim ID: BCBS-771204
+Procedure Code: 99214
+Diagnosis: I10 Essential hypertension
+Service Date: 2026-03-29
+Billed Amount: 214.00
+Allowed Amount: 132.00
+Paid Amount: 88.00
+Patient Responsibility: 44.00
+Denial reason: Contractual adjustment and possible underpayment review
+Provider: Riverbend Family Medicine

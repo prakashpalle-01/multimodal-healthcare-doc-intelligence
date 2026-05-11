@@ -1,0 +1,10 @@
+Patient: Marcus Reed
+Payer: Aetna
+Medication: Semaglutide 1 mg
+NDC: 0169-4132-12
+Prescriber: Dr. Amelia Chen
+Pharmacy: Northside Pharmacy
+Diagnosis: E11.9 Type 2 diabetes mellitus
+Service Date: 2026-04-22
+Prior Authorization: Missing
+Notes: Patient has documented trial of metformin and requires dose escalation review.

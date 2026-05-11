@@ -1,0 +1,9 @@
+Patient: Elena Garcia
+Payer: Cigna
+Invoice ID: INV-2026-8841
+Procedure Code: 80053
+Diagnosis: R53.83 Other fatigue
+Service Date: 2026-05-02
+Billed Amount: 96.00
+Provider: Metro Clinical Laboratory
+Notes: Lab invoice should be matched against claim remittance and payer allowed amount.

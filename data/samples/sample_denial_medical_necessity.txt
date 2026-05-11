@@ -1,0 +1,10 @@
+Patient: Nora Patel
+Payer: UnitedHealthcare
+Claim ID: UHC-449120
+Procedure Code: 73721
+Diagnosis: M25.561 Pain in right knee
+Denial reason: Medical necessity documentation not provided
+Service Date: 2026-04-18
+Billed Amount: 742.00
+Provider: Lakeside Imaging Center
+Notes: Ordering provider documented persistent pain after six weeks of conservative therapy.

@@ -1,0 +1,70 @@
+{
+  "resourceType": "ExplanationOfBenefit",
+  "id": "synthetic-eob-1001",
+  "status": "active",
+  "type": {
+    "coding": [
+      {
+        "system": "https://bluebutton.cms.gov/resources/codesystem/eob-type",
+        "code": "CARRIER",
+        "display": "Carrier"
+      }
+    ]
+  },
+  "patient": {
+    "reference": "Patient/synthetic-patient-1001",
+    "display": "Jane Smith"
+  },
+  "insurer": {
+    "display": "Aetna"
+  },
+  "claim": {
+    "identifier": {
+      "value": "CLM-2002"
+    }
+  },
+  "diagnosis": [
+    {
+      "sequence": 1,
+      "diagnosisCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/sid/icd-10-cm",
+            "code": "E11.9",
+            "display": "Type 2 diabetes mellitus without complications"
+          }
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "sequence": 1,
+      "productOrService": {
+        "coding": [
+          {
+            "system": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+            "code": "J3490",
+            "display": "Unclassified drugs"
+          }
+        ]
+      },
+      "servicedDate": "2026-05-03",
+      "adjudication": [
+        {
+          "category": {
+            "coding": [
+              {
+                "code": "submitted"
+              }
+            ]
+          },
+          "amount": {
+            "value": 1284.0,
+            "currency": "USD"
+          }
+        }
+      ]
+    }
+  ]
+}

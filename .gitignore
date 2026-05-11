@@ -20,7 +20,7 @@ data/annotations/**
 data/samples/**
 !data/README.md
 !data/samples/
-!data/samples/sample_claim_denial.txt
+!data/samples/**
 
 ai/models/checkpoints/**
 notebooks/.ipynb_checkpoints/
