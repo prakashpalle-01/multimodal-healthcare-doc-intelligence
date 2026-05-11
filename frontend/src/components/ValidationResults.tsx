@@ -18,6 +18,12 @@ export default function ValidationResults({ score, issues }: ValidationResultsPr
         </div>
       </div>
       <div className="issue-list">
+        {issues.length === 0 && (
+          <article className="empty-state">
+            <strong>No validation issues</strong>
+            <span>The selected document passed the current payer-rule checks.</span>
+          </article>
+        )}
         {issues.map((issue) => (
           <article className={`issue issue-${issue.severity}`} key={issue.id}>
             <AlertTriangle size={18} aria-hidden="true" />

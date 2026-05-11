@@ -5,6 +5,7 @@ import {
   Gauge,
   GitPullRequestArrow,
   LayoutDashboard,
+  Radio,
   PenLine,
   ShieldCheck
 } from "lucide-react";
@@ -193,6 +194,10 @@ export default function App() {
             <span>Doc Intelligence</span>
           </div>
         </div>
+        <div className="sidebar-status">
+          <Radio size={15} aria-hidden="true" />
+          <span>Workflow engine online</span>
+        </div>
 
         <nav aria-label="Primary navigation">
           {navItems.map((item) => {
@@ -218,6 +223,10 @@ export default function App() {
             <h1>{titleByView[activeView]}</h1>
           </div>
           <div className="topbar-actions">
+            <span className="selected-document-chip">
+              <strong>{selectedDocument.filename}</strong>
+              <small>{selectedDocument.type}</small>
+            </span>
             <span className="live-indicator">Live queue</span>
             <button className="primary-button" onClick={() => setActiveView("upload")}>
               <FileInput size={18} aria-hidden="true" />

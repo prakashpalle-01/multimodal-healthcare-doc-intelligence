@@ -4,25 +4,29 @@
 
 :root {
   color-scheme: light;
-  --ink: #172026;
-  --muted: #60717c;
-  --line: #d9e2e7;
+  --ink: #12212a;
+  --muted: #667985;
+  --line: #dbe5ea;
   --surface: #ffffff;
-  --surface-soft: #f6f8fa;
-  --nav: #18252c;
-  --accent: #24708a;
-  --accent-strong: #13546b;
-  --green: #19735a;
-  --yellow: #9a6b14;
-  --red: #b03232;
-  --blue-soft: #e8f3f6;
+  --surface-soft: #f7fafb;
+  --nav: #15242b;
+  --nav-soft: #20323a;
+  --accent: #226f85;
+  --accent-strong: #124f62;
+  --green: #17745b;
+  --yellow: #916514;
+  --red: #ad3434;
+  --blue-soft: #e9f5f7;
+  --shadow: 0 16px 40px rgba(20, 40, 50, 0.08);
 }
 
 body {
   margin: 0;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
-  background: #eef3f5;
+  background:
+    linear-gradient(180deg, rgba(233, 245, 247, 0.8), rgba(247, 250, 251, 0.2) 260px),
+    #f3f7f8;
 }
 
 button,
@@ -38,7 +42,7 @@ button {
 .app-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-columns: 276px minmax(0, 1fr);
 }
 
 .sidebar {
@@ -48,6 +52,7 @@ button {
   color: white;
   position: sticky;
   top: 0;
+  box-shadow: 12px 0 32px rgba(18, 33, 42, 0.12);
 }
 
 .brand {
@@ -58,12 +63,13 @@ button {
 }
 
 .brand-mark {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   display: grid;
   place-items: center;
   border-radius: 8px;
   background: #2f879e;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
 }
 
 .brand strong,
@@ -74,6 +80,24 @@ button {
 .brand span {
   color: #b8c9d1;
   font-size: 0.9rem;
+}
+
+.sidebar-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #cfe4ea;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.sidebar-status svg {
+  color: #7bd3b3;
 }
 
 nav {
@@ -88,21 +112,33 @@ nav {
   gap: 10px;
   border: 0;
   border-radius: 8px;
-  padding: 11px 12px;
+  padding: 12px;
   color: #dce9ee;
   background: transparent;
   text-align: left;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
 }
 
 .nav-item:hover,
 .nav-item.active {
-  background: #263840;
+  background: var(--nav-soft);
   color: #ffffff;
+}
+
+.nav-item:hover {
+  transform: translateX(2px);
+}
+
+.nav-item.active {
+  box-shadow: inset 3px 0 0 #75c9dc;
 }
 
 .workspace {
   min-width: 0;
-  padding: 28px;
+  padding: 30px;
 }
 
 .topbar {
@@ -110,7 +146,9 @@ nav {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 24px;
+  margin-bottom: 26px;
+  border-bottom: 1px solid rgba(18, 33, 42, 0.08);
+  padding-bottom: 22px;
 }
 
 .topbar p,
@@ -134,8 +172,9 @@ p {
 
 h1 {
   margin: 0;
-  font-size: clamp(1.5rem, 2vw, 2.1rem);
+  font-size: clamp(1.55rem, 2vw, 2.15rem);
   line-height: 1.15;
+  letter-spacing: 0;
 }
 
 .topbar-actions,
@@ -145,10 +184,38 @@ h1 {
   gap: 10px;
 }
 
+.selected-document-chip {
+  max-width: 320px;
+  min-height: 42px;
+  display: grid;
+  align-content: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px 12px;
+  background: white;
+}
+
+.selected-document-chip strong,
+.selected-document-chip small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selected-document-chip strong {
+  font-size: 0.9rem;
+}
+
+.selected-document-chip small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
 .live-indicator {
   display: inline-flex;
   align-items: center;
-  min-height: 36px;
+  min-height: 42px;
   padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -163,18 +230,22 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 38px;
+  min-height: 42px;
   border: 0;
   border-radius: 8px;
   padding: 0 14px;
   color: white;
   background: var(--accent);
   font-weight: 700;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
 }
 
 .primary-button:hover,
 .file-action:hover {
   background: var(--accent-strong);
+  transform: translateY(-1px);
 }
 
 .icon-button {
@@ -198,11 +269,12 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  border: 1px solid #b9d5de;
+  border: 1px solid #bfdbe3;
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: 14px 16px;
   color: #244752;
-  background: var(--blue-soft);
+  background: linear-gradient(90deg, #e9f5f7, #f8fcfd);
+  box-shadow: 0 8px 24px rgba(34, 111, 133, 0.08);
 }
 
 .workflow-banner strong,
@@ -223,17 +295,25 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
-  box-shadow: 0 10px 30px rgba(23, 32, 38, 0.05);
+  box-shadow: var(--shadow);
 }
 
 .metric {
   display: grid;
-  gap: 8px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 4px 12px;
+  align-items: center;
   padding: 18px;
 }
 
 .metric svg {
+  grid-row: span 2;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  padding: 10px;
   color: var(--accent);
+  background: var(--blue-soft);
 }
 
 .metric span {
@@ -243,11 +323,12 @@ h1 {
 }
 
 .metric strong {
-  font-size: 1.8rem;
+  font-size: 1.85rem;
+  line-height: 1;
 }
 
 .panel {
-  padding: 18px;
+  padding: 20px;
 }
 
 .panel-heading,
@@ -264,12 +345,21 @@ h1 {
 .document-viewer h2,
 .editor-toolbar h2 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.18rem;
+}
+
+.queue-count {
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--accent-strong);
+  background: var(--blue-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
 }
 
 .queue-table {
   display: grid;
-  gap: 4px;
+  gap: 6px;
 }
 
 .queue-head,
@@ -281,7 +371,7 @@ h1 {
 }
 
 .queue-head {
-  padding: 0 12px 8px;
+  padding: 0 14px 8px;
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 800;
@@ -290,18 +380,32 @@ h1 {
 
 .queue-row {
   width: 100%;
-  border: 1px solid transparent;
+  border: 1px solid #edf2f4;
   border-radius: 8px;
-  padding: 12px;
-  background: transparent;
+  padding: 14px;
+  background: #fbfdfe;
   color: var(--ink);
   text-align: left;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .queue-row:hover,
 .queue-row.active {
   border-color: #b9d5de;
   background: var(--blue-soft);
+}
+
+.queue-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(18, 33, 42, 0.06);
+}
+
+.queue-row.active {
+  box-shadow: inset 3px 0 0 var(--accent);
 }
 
 .queue-row strong,
@@ -320,7 +424,7 @@ h1 {
 .reason-code {
   width: fit-content;
   border-radius: 999px;
-  padding: 5px 9px;
+  padding: 6px 10px;
   font-size: 0.78rem;
   font-weight: 800;
 }
@@ -354,16 +458,18 @@ h1 {
 }
 
 .upload-dropzone {
-  min-height: 260px;
+  min-height: 300px;
   display: grid;
   place-items: center;
   align-content: center;
   gap: 16px;
   padding: 32px;
   text-align: center;
-  border: 1px dashed #9db5c0;
+  border: 1px dashed #8db1bc;
   border-radius: 8px;
-  background: #f8fbfc;
+  background:
+    linear-gradient(180deg, rgba(233, 245, 247, 0.6), rgba(255, 255, 255, 0.7)),
+    #f8fbfc;
 }
 
 .upload-dropzone h2,
@@ -394,10 +500,10 @@ h1 {
   display: flex;
   gap: 12px;
   align-items: flex-start;
-  border: 1px solid var(--line);
+  border: 1px solid #e3ebef;
   border-radius: 8px;
   padding: 12px;
-  background: var(--surface-soft);
+  background: #fbfdfe;
 }
 
 .empty-state {
@@ -427,7 +533,7 @@ h1 {
 
 .workspace-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 1fr) 360px;
   gap: 18px;
   align-items: start;
 }
@@ -442,23 +548,44 @@ h1 {
 }
 
 .document-viewer {
-  padding: 18px;
+  padding: 20px;
 }
 
 .document-canvas {
   min-height: 540px;
   display: grid;
-  grid-template-columns: 90px minmax(0, 1fr);
+  grid-template-columns: 112px minmax(0, 1fr);
   gap: 22px;
   align-items: start;
-  padding: 28px;
-  border: 1px solid #cad7dd;
+  padding: 30px;
+  border: 1px solid #cddbe1;
   border-radius: 8px;
-  background: linear-gradient(180deg, #ffffff, #f9fbfc);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(249, 252, 253, 0.96)),
+    repeating-linear-gradient(0deg, #edf4f6 0, #edf4f6 1px, transparent 1px, transparent 24px);
 }
 
 .document-canvas svg {
   color: var(--accent);
+}
+
+.document-file-icon {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px 12px;
+  color: var(--accent-strong);
+  background: white;
+}
+
+.document-file-icon span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .document-lines {
@@ -469,7 +596,7 @@ h1 {
 .document-lines span {
   height: 14px;
   border-radius: 999px;
-  background: #d5e2e7;
+  background: #d7e5ea;
 }
 
 .document-lines .short {
@@ -492,6 +619,14 @@ h1 {
   display: grid;
   grid-template-columns: 28px minmax(0, 1fr) auto;
   align-items: center;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.field-row:hover {
+  border-color: #c2dbe3;
+  transform: translateX(2px);
 }
 
 .field-status {
@@ -508,7 +643,9 @@ h1 {
   display: flex;
   gap: 12px;
   align-items: center;
+  border-bottom: 1px solid var(--line);
   margin-bottom: 16px;
+  padding-bottom: 16px;
 }
 
 .validation-summary svg,
@@ -523,10 +660,16 @@ h1 {
 
 .issue-high {
   border-color: #f2b2aa;
+  background: #fff8f7;
 }
 
 .issue-medium {
   border-color: #efd49c;
+  background: #fffaf0;
+}
+
+.issue-low {
+  border-color: #c8dce3;
 }
 
 .issue p {
@@ -603,19 +746,20 @@ h1 {
 
 .editor-panel textarea {
   width: 100%;
-  min-height: 460px;
+  min-height: 500px;
   resize: vertical;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 16px;
   color: var(--ink);
   line-height: 1.6;
-  background: var(--surface-soft);
+  background: #fbfdfe;
+  box-shadow: inset 0 1px 0 rgba(18, 33, 42, 0.03);
 }
 
 .timeline {
   display: grid;
-  gap: 14px;
+  gap: 16px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -625,10 +769,15 @@ h1 {
   display: grid;
   grid-template-columns: 24px minmax(0, 1fr);
   gap: 10px;
+  position: relative;
 }
 
 .timeline svg {
   color: var(--accent);
+  border-radius: 999px;
+  background: var(--blue-soft);
+  padding: 3px;
+  box-sizing: content-box;
 }
 
 .timeline p {

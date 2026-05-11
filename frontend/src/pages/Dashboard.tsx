@@ -20,6 +20,11 @@ const statusLabels: Record<HealthcareDocument["status"], string> = {
 export default function Dashboard({ documents, selectedId, onSelectDocument }: DashboardProps) {
   const needsReview = documents.filter((document) => document.status === "needs_review").length;
   const appealReady = documents.filter((document) => document.status === "appeal_ready").length;
+  const avgConfidence = documents.length
+    ? Math.round(
+        (documents.reduce((total, document) => total + document.confidence, 0) / documents.length) * 100
+      )
+    : 0;
 
   return (
     <section className="page-stack">
@@ -42,7 +47,7 @@ export default function Dashboard({ documents, selectedId, onSelectDocument }: D
         <article className="metric">
           <Activity size={22} aria-hidden="true" />
           <span>Avg confidence</span>
-          <strong>86%</strong>
+          <strong>{avgConfidence}%</strong>
         </article>
       </div>
 
@@ -52,6 +57,7 @@ export default function Dashboard({ documents, selectedId, onSelectDocument }: D
             <p>Work queue</p>
             <h2>Documents</h2>
           </div>
+          <span className="queue-count">{documents.length} active</span>
         </div>
         <div className="queue-table">
           <div className="queue-head">

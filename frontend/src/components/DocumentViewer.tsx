@@ -1,4 +1,4 @@
-import { FileText, ScanLine } from "lucide-react";
+import { FileText, ScanLine, ZoomIn } from "lucide-react";
 
 import type { HealthcareDocument } from "../types/document";
 
@@ -17,9 +17,15 @@ export default function DocumentViewer({ document }: DocumentViewerProps) {
         <button className="icon-button" title="Run OCR">
           <ScanLine size={18} aria-hidden="true" />
         </button>
+        <button className="icon-button" title="Zoom document">
+          <ZoomIn size={18} aria-hidden="true" />
+        </button>
       </div>
       <div className="document-canvas">
-        <FileText size={54} aria-hidden="true" />
+        <div className="document-file-icon">
+          <FileText size={42} aria-hidden="true" />
+          <span>{document.type}</span>
+        </div>
         <div className="document-lines">
           <span />
           <span />
