@@ -1,10 +1,17 @@
 import { Copy, Save } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface AppealEditorProps {
   draft: string;
 }
 
 export default function AppealEditor({ draft }: AppealEditorProps) {
+  const [draftText, setDraftText] = useState(draft);
+
+  useEffect(() => {
+    setDraftText(draft);
+  }, [draft]);
+
   return (
     <section className="panel editor-panel" aria-label="Appeal draft editor">
       <div className="editor-toolbar">
@@ -22,7 +29,11 @@ export default function AppealEditor({ draft }: AppealEditorProps) {
           </button>
         </div>
       </div>
-      <textarea defaultValue={draft} aria-label="Appeal draft text" />
+      <textarea
+        value={draftText}
+        onChange={(event) => setDraftText(event.target.value)}
+        aria-label="Appeal draft text"
+      />
     </section>
   );
 }
